@@ -1,7 +1,7 @@
 %%Master_Script
 %%NOTE: ENSURE modified file HAS BEEN DELETED FROM directory BEFORE RUNNING
-Inputfilename = 'Contact_Force';
-KFileName = 'Model_2_Short.k';
+Inputfilename = 'ncforc';
+KFileName = 'Model_2.k';
 
 
 %Run force generation script

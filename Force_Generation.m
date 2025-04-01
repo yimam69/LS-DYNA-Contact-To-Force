@@ -37,7 +37,7 @@ for (i = 1:NumTimeSteps);
         j = 12;
     else
       
-        j = j + 12 + 4*(i-1);
+        j = j + 11 + 4*(i-1);
     end
 
     Textfiltered = text(j);
@@ -55,17 +55,32 @@ NumNodes = ceil(NumNodes/(2*NumTimeSteps))-2;
 %Preallocate forces array
 Forces = NaN(NumNodes,4,NumTimeSteps);
 
+i3 = 0;
+
 %%Loop to fill in new array
 for(i = 1:NumTimeSteps);
     for(i2 = 1:NumNodes);
     
-        j2 = i2*2+(i-1)*3+(i-1)*NumNodes*2;
+        j2 = i2*2+(i-1)*3+(i-1)*NumNodes*2+1;
         
         k2 = j2-1;
         
         %Fill in node number
         Forces(i2,1,i) = RawData(k2,1);
 
+        %Statement used to plot individual nodes
+        if  RawData(k2,1) == 2360;
+            i3 = i3+1;
+             %Fill in x force
+            plotx(i3) = RawData(j2,1);
+
+            %Fill in y force
+            ploty(i3) = RawData(j2,2);
+
+            %Fill in z force
+            plotz(i3) = RawData(j2,3);
+        end
+            
         %Fill in x force
         Forces(i2,2,i) = RawData(j2,1);
 
