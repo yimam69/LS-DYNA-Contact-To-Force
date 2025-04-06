@@ -3,10 +3,6 @@ function [Forces, NumNodes,TimeSteps, NumTimeSteps] = Force_Generation(Inputfile
 
 %Read data into matrix
 RawData = readmatrix(Inputfilename);
-
-%Read data into string array
-RawDataString = readlines(Inputfilename);
-
 %Read data into cell array
 %RawDataCell = fileread(Inputfilename):
 
@@ -20,8 +16,10 @@ j = 1;
 
 for (i=1:IndexLength)
     if(LocationIndex(i) == 1 & LocationIndex(i+1) == 1 & LocationIndex(i+2) == 1)
-        j = j+1;
+        
         LocationIndex1(j) = i+2;
+        j = j+1;
+        
     end
 end
 
@@ -41,12 +39,12 @@ for (i = 1:NumTimeSteps);
         j = 12;
     else
       
-        j = j + 11 + 4*(i-1);
+        j = j + 12 + 4*(i-1);
     end
 
     Textfiltered = text(j);
     TextFilterNum = regexprep(Textfiltered,'forces (t=','');
-    TextFilterNum = regexprep(TextFilterNum,') for interface         1 surfa  side','');
+    TextFilterNum = regexprep(TextFilterNum,') for interface         2 surfa  side','');
     TimeSteps(i) = str2num(TextFilterNum);
 
 
@@ -59,56 +57,25 @@ NumNodes = ceil(NumNodes/(2*NumTimeSteps))-2;
 %Preallocate forces array
 Forces = NaN(NumNodes,4,NumTimeSteps);
 
-i3 = 0;
-
 %%Loop to fill in new array
 for(i = 1:NumTimeSteps);
     for(i2 = 1:NumNodes);
-        if i == 1 & i2 == 1
-            j2 = 17
-        elseif i2 == 1
-            j2 = j2+9;
-        else
-            j2 = j2+2;
-        end
+    
+        j2 = i2*2+(i-1)*3+(i-1)*NumNodes*2;
         
         k2 = j2-1;
         
         %Fill in node number
-        splitStr = regexp(RawDataString(k2),'         ','split');
-        Forces(i2,1,i) = splitStr(1);
-
-        %Statement used to plot individual nodes
-        if  RawData(k2,1) == 2360;
-            i3 = i3+1;
-             %Fill in x force
-            plotx(i3) = RawData(j2,1);
-
-            %Fill in y force
-            ploty(i3) = RawData(j2,2);
-
-            %Fill in z force
-            plotz(i3) = RawData(j2,3);
-        end
-
-        %Extract values from String array
-        newStr = regexprep(RawDataString(j2),'                  ','');
-        splitStr = regexp(newStr,'  ','split');
-        xforce = str2num(splitStr(1));
-        
-        yforce = str2num(splitStr(2));
-
-        zforce = str2num(splitStr(3));
+        Forces(i2,1,i) = RawData(k2,1);
 
         %Fill in x force
-        Forces(i2,2,i) = xforce;
+        Forces(i2,2,i) = RawData(j2,1);
 
         %Fill in y force
-        Forces(i2,3,i) = yforce;
+        Forces(i2,3,i) = RawData(j2,2);
 
         %Fill in z force
-        Forces(i2,4,i) = zforce;
-       
+        Forces(i2,4,i) = RawData(j2,3);
     end
 end
 %Save forces to output
