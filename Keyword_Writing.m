@@ -1,5 +1,5 @@
 %%Keyword writing
-function output = Keyword_Writing(Forces, NumNodes,TimeSteps, NumTimeSteps, KFileName)
+function output = Keyword_Writing(Forces_Modified, TimeSteps_Modified, NumTimeSteps_Modified, NumNodes, KFileName);
 
 %Create name for new file
 OutputFileName = insertBefore(KFileName,'.k','Modified');
@@ -11,7 +11,7 @@ fileid = fopen(OutputFileName,'a+');
 %Read existing kfile into string vector
 Text = readlines(KFileName);
 TextLength = length(Text);
-Text = [Text; strings(3*NumTimeSteps*NumNodes+3*8*NumNodes-1,1)];
+Text = [Text; strings(3*NumTimeSteps_Modified*NumNodes+3*8*NumNodes-1,1)];
 OutputTextLength = length(Text);
 
 %%Modify string matrix with x forces
@@ -26,7 +26,7 @@ for (i = 1:NumNodes)
     
         Name = append('X Force ',num2str(lcid));
 
-        nid = Forces(i,1,1);
+        nid = Forces_Modified(i,1,1);
         
         Text(IndexLoc) = '*DEFINE_CURVE_TITLE';
         IndexLoc = IndexLoc + 1;
@@ -39,8 +39,8 @@ for (i = 1:NumNodes)
         Text(IndexLoc) = '$#                a1                  o1';
         IndexLoc = IndexLoc + 1;
 
-                for k = 1:NumTimeSteps;
-                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps(k),Forces(i,2,k));
+                for k = 1:NumTimeSteps_Modified;
+                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps_Modified(k),Forces_Modified(i,2,k));
             
                 IndexLoc = IndexLoc + 1;
                 end
@@ -49,17 +49,11 @@ for (i = 1:NumNodes)
         Text(IndexLoc) = '$#     nid       dof      lcid        sf       cid        m1        m2        m3';
         IndexLoc = IndexLoc + 1;
         Text(IndexLoc) = sprintf('%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f%10.2f',nid,1,lcid,1,27,0,0,0);
-        IndexLoc = IndexLoc + 1;
-
-        
-        
-
-
-        
+        IndexLoc = IndexLoc + 1;     
 
 end
 
-%%Modify string matrix with y forces
+%%Modify string matrix with y Forces_Modified
 
 for (i = 1:NumNodes)
         
@@ -68,7 +62,7 @@ for (i = 1:NumNodes)
     
         Name = append('Y Force ',num2str(lcid));
 
-        nid = Forces(i,1,1);
+        nid = Forces_Modified(i,1,1);
         
         Text(IndexLoc) = '*DEFINE_CURVE_TITLE';
         IndexLoc = IndexLoc + 1;
@@ -81,8 +75,8 @@ for (i = 1:NumNodes)
         Text(IndexLoc) = '$#                a1                  o1';
         IndexLoc = IndexLoc + 1;
 
-                for k = 1:NumTimeSteps;
-                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps(k),Forces(i,3,k));
+                for k = 1:NumTimeSteps_Modified;
+                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps_Modified(k),Forces_Modified(i,3,k));
             
                 IndexLoc = IndexLoc + 1;
                 end
@@ -104,7 +98,7 @@ for (i = 1:NumNodes)
     
         Name = append('Z Force ',num2str(lcid));
 
-        nid = Forces(i,1,1);
+        nid = Forces_Modified(i,1,1);
         
         Text(IndexLoc) = '*DEFINE_CURVE_TITLE';
         IndexLoc = IndexLoc + 1;
@@ -117,8 +111,8 @@ for (i = 1:NumNodes)
         Text(IndexLoc) = '$#                a1                  o1';
         IndexLoc = IndexLoc + 1;
 
-                for k = 1:NumTimeSteps;
-                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps(k),Forces(i,4,k));
+                for k = 1:NumTimeSteps_Modified;
+                Text(IndexLoc) = sprintf('%20.4e%20.4f',TimeSteps_Modified(k),Forces_Modified(i,4,k));
             
                 IndexLoc = IndexLoc + 1;
                 end
