@@ -8,13 +8,14 @@ NumTimeStepsPass = ceil(NumTimeSteps/InputPasses);
 NumTimeSteps_Modified = NumTimeSteps*DesiredPasses;
 AppendArray = TimeSteps((1+NumTimeSteps-NumTimeStepsPass):NumTimeSteps);
 FirstPassEnd = TimeSteps(NumTimeStepsPass);
+FinalPassEnd = FirstPassEnd*(DesiredPasses/InputPasses);
 
 %Preallocate extended array
 TimeSteps_Modified = NaN(NumTimeSteps_Modified,1);
 TimeSteps_Modified(1:NumTimeSteps) = TimeSteps;
 
 %Fill New Timestep Array
-for i = (1:DesiredPasses)
+for i = (1:DesiredPasses-1)
     
     %Find New Timesteps
     AppendArray = AppendArray+FirstPassEnd;
@@ -23,6 +24,9 @@ for i = (1:DesiredPasses)
     TimeSteps_Modified(NumTimeSteps*i:i*NumTimeStepsPass+NumTimeSteps-1) = AppendArray;
     
 end
+
+%Set final timestep to endtime
+TimeSteps_Modified(NumTimeSteps_Modified) = round(FinalPassEnd,3);
 
 %Preallocate Modified Forces Array
 Forces_Modified = NaN(NumNodes,4,NumTimeSteps_Modified);

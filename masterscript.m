@@ -16,10 +16,11 @@ DesiredPasses = 10; %Number of desired simulation passes
 tic
 %%Run force generation script
 [Forces, NumNodes, TimeSteps, NumTimeSteps] = Force_Generation(Inputfilename, PlotFlag, PlotNode);
-toc
+ForceGenerationTime = toc
 
-tic
+
 %% 
+tic
 %%Run Force generation modification script
 if InputPasses ~= DesiredPasses
     [Forces_Modified, TimeSteps_Modified, NumTimeSteps_Modified] = Force_Modification(Forces, InputPasses, DesiredPasses, TimeSteps, NumTimeSteps, NumNodes);
@@ -28,10 +29,10 @@ else
     TimeSteps_Modified = Timesteps;
     NumTimeSteps_Modified = NumTimeSteps;
 end
-toc
+ForceModificationTime = toc
 
-tic
+
 %% 
+
 %%Run kfile generator
 output = Keyword_Writing(Forces_Modified, TimeSteps_Modified, NumTimeSteps_Modified, NumNodes, KFileName);
-toc
